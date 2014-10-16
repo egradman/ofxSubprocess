@@ -1,4 +1,5 @@
 #include "ofxSubprocess.h"
+#include <sys/wait.h>
 
 void ofxSubprocess::forkexec()
 {
@@ -17,6 +18,7 @@ void ofxSubprocess::forkexec()
   pid = fork();
   
   ofLog() << "forked " << path << " with pid " << pid;
+  started_at = ofGetElapsedTimeMillis();
   
   switch (pid) {
     case -1 :
@@ -26,4 +28,8 @@ void ofxSubprocess::forkexec()
     default :
       return;
   }
+}
+
+void ofxSubprocess::wait() {
+  waitpid(pid, &status, 0);
 }
